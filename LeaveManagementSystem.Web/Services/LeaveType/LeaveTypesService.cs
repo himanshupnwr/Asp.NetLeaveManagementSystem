@@ -3,7 +3,7 @@ using LeaveManagementSystem.Web.Data;
 using LeaveManagementSystem.Web.Models.LeaveTypes;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeaveManagementSystem.Web.Services
+namespace LeaveManagementSystem.Web.Services.LeaveTypeService
 {
     public class LeaveTypesService(ApplicationDbContext context, IMapper mapper) : ILeaveTypesService
     {
@@ -68,7 +68,7 @@ namespace LeaveManagementSystem.Web.Services
 
         public async Task<bool> CheckIfLeaveTypeAlreadyExists(string name)
         {
-            return await _context.LeaveTypes.AnyAsync(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return await _context.LeaveTypes.AnyAsync(m => m.Name.Equals(name));
         }
 
 
@@ -76,6 +76,12 @@ namespace LeaveManagementSystem.Web.Services
         {
             return await _context.LeaveTypes.AnyAsync(m => m.Name.Equals(leaveTypeEditVM.Name,
                 StringComparison.InvariantCultureIgnoreCase) && m.Id != leaveTypeEditVM.Id);
+        }
+
+        public async Task<bool> DaysExceedMaximum(int leaveTypeId, int days)
+        {
+            var leaveType = await _context.LeaveTypes.FindAsync(leaveTypeId);
+            return leaveType.NumberOfDays < days;
         }
     }
 }

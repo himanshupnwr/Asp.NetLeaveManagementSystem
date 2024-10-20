@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using LeaveManagementSystem.Web.Common
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,9 +26,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a>
-                        </li>
+                        @if (User.IsInRole(Roles.Administrator))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Leave Management
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Periods" asp-action="Index">Periods</a></li>
+                                    <li><a class="dropdown-item" asp-controller="LeaveAllocation" asp-action="Index">View Employees</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="LeaveAllocation" asp-action="Details">View Allocations</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

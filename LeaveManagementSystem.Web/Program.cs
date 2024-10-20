@@ -1,6 +1,8 @@
-using LeaveManagementSystem.Web.Data;
-using LeaveManagementSystem.Web.Services;
+using LeaveManagementSystem.Web.Services.Email;
+using LeaveManagementSystem.Web.Services.LeaveAllocations;
+using LeaveManagementSystem.Web.Services.LeaveTypeService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -19,12 +21,17 @@ namespace LeaveManagementSystem.Web
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             //Add automapper using dependency injection container
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            builder.Services.AddHttpContextAccessor();
 
             //add service dependencies
             builder.Services.AddScoped<ILeaveTypesService, LeaveTypesService>();
+            builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
