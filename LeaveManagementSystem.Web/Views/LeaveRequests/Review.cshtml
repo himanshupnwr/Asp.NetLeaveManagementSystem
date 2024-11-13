@@ -1,0 +1,90 @@
+﻿@model LeaveManagementSystem.Web.Models.LeaveRequests.ReviewLeaveRequestVM
+
+@{
+    ViewData["Title"] = "Leave Request Review";
+}
+
+<h1>
+    Leave Request Details
+</h1>
+
+<div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">Requesting Employee</h4>
+    <hr />
+    <p>
+        <strong>Employee Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName
+    </p>
+    <hr />
+</div>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LeaveType)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.LeaveType)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.StartDate)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.EndDate)
+        </dt>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReviewComments)
+        </dt>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.ReviewComments)
+        </dt>
+    </dl>
+</div>
+
+<div class="row">
+    <div class="col">
+        <button class="btn btn-success approvalBtn" data-id="@Model.Id" data-approved="true">Approve</button>
+    </div>
+    <div class="col">
+        <button class="btn btn-warning declineBtn" data-id="@Model.Id" data-approved="true">Decline</button>
+    </div>
+    <div class="col">
+        <a class="btn btn-primary" asp-action="ListRequests">Back to List</a>
+    </div>
+</div>
+
+<form asp-action="Review" id="approvalForm">
+    <input type="hidden" name="id" id="leaveRequestId" />
+    <input type="hidden" name="approved" id="approved" />
+</form>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('.approvalBtn').click(
+                function (e) {
+                    new swal({
+                        title: "Are You Sure?",
+                        text: "Please Confirm the approval decision?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((confirm) => {
+                        if (confirm) {
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            var approved = btn.data("approved");
+                            $('#leaveRequestId').val(id);
+                            $('#approved').val(approved);
+                            $('#approvalForm').submit();
+                        }
+                    });
+                })
+        });
+    </script>
+}

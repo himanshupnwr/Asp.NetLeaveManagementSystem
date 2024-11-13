@@ -1,0 +1,119 @@
+﻿@using LeaveManagementSystem.Web.Models.LeaveRequests
+@model LeaveManagementSystem.Web.Models.LeaveRequests.EmployeeLeaveRequestListVM
+
+@{
+    ViewData["Title"] = "View Leave Requests";
+}
+<h1>Admin Leave Requests View</h1>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="card-title text-primary">@Model.TotalRequests</h1>
+                <h5 class="card-text">@Html.DisplayNameFor(model => model.TotalRequests)</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="card-title text-success">@Model.ApprovedRequests</h1>
+                <h5 class="card-text">@Html.DisplayNameFor(model => model.ApprovedRequests)</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="card-title text-warning">@Model.PendingRequests</h1>
+                <h5 class="card-text">@Html.DisplayNameFor(model => model.PendingRequests)</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-body text-center">
+                <h1 class="card-title text-danger">@Model.DeclinedRequests</h1>
+                <h5 class="card-text">@Html.DisplayNameFor(model => model.DeclinedRequests)</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(Model.LeaveRequests.Count == 0)
+{
+    <div class="alert alert-info">
+        <h3>There are no requests at this time</h3>
+    </div>
+}
+<hr />
+<h2>Leave Requests</h2>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].LeaveType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].NumberOfDays)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].LeaveRequestStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.LeaveRequests)
+        {
+            var className = string.Empty;
+            if (item.LeaveRequestStatus == LeaveRequestStatusEnum.Pending)
+            {
+                className = "warning";
+            }
+            if (item.LeaveRequestStatus == LeaveRequestStatusEnum.Approved)
+            {
+                className = "success";
+            }
+            if (item.LeaveRequestStatus == LeaveRequestStatusEnum.Declined)
+            {
+                className = "danger";
+            }
+            if (item.LeaveRequestStatus == LeaveRequestStatusEnum.Canceled)
+            {
+                className = "dark";
+            }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfDays)
+                </td>
+                <td>
+                    <span class="badge rounded-pill bg-@className">@item.LeaveRequestStatus.ToString()</span>
+                </td>
+                <td>
+                    @if (item.LeaveRequestStatus == LeaveRequestStatusEnum.Pending)
+                    {
+                        <a asp-action="Review" asp-route-id="@item.Id" class="btn btn-primary">Review</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
